@@ -27,6 +27,9 @@
     <ClCompile Include="Solution2.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Solution3.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">

@@ -73,8 +73,6 @@ Node* Tree(int n)
 	}
 	return newNode;
 }
-
-
 // Распечатка двоичного дерева в виде скобочной записи
 void printTree(Node* root) {
 	if (root)
@@ -140,5 +138,88 @@ void postOrderTraves(Node* root)
 		postOrderTraves(root->left);
 		postOrderTraves(root->right);
 		printf("%d ", root->data);
+	}
+}
+
+/*	ХЕШ - ФУНКЦИЯ	*/
+hashTableIndex hash(T data)
+{
+	/***********************************
+	*хэш-функция применяемая к данным *
+	***********************************/
+	return (data % hashTableSize);
+}
+Node_* insertNode(T data)
+{
+	Node_* p, * p0;
+	hashTableIndex bucket;
+	/*************************************************
+	*распределим узел для данных и вставим в таблицу*
+	*************************************************/
+	/* Вставка узла в начало таблицы */
+	bucket = hash(data); // рассчитываем номер блока
+	p = (Node_*)malloc(sizeof(Node_));
+	if (p == 0) {
+		// В стандартный поток ошибок выводим сообщение о нехватке памяти
+		fprintf(stderr, "out of memory (insertNode)\n");
+		exit(1);
+	}
+	// Запоминаем текущее значение указателя найденного блока
+	p0 = hashTable[bucket];
+	// В найденный блок записываем новый элемент
+	hashTable[bucket] = p;
+	// Связываем новый элемент со старым
+	p->next = p0;
+	// Записываем данные в новый элемент
+	p->data = data;
+	return p;
+}
+/*Удаление узла*/
+void deleteNode(T data) {
+	Node_* p0, * p;
+	hashTableIndex bucket;
+	/********************************************
+	* удаляем узел содержащие данные из таблицы *
+	********************************************/
+	/* находим узел*/
+	p0 = 0;
+	bucket = hash(data);
+	p = hashTable[bucket];
+	while (p && !compEQ(p->data, data)) {
+		p0 = p;
+		p = p->next;
+	}
+	if (!p)
+		return;
+	/* p найденный узел для удаления, удаляем его из списка */
+	if (p0)
+		// не первый, p0 указывает на предыдущий
+		p0->next = p->next;
+	else
+		// первый в цепочке
+		hashTable[bucket] = p->next;
+	free(p);
+}
+Node_* findNode(T data) {
+	Node_* p;
+	/**************************************
+	*нахождение узла, содержащего данные *
+	**************************************/
+	p = hashTable[hash(data)];
+	while (p && !compEQ(p->data, data))
+		p = p->next;
+	return p;
+}
+void printTable(int size) {
+	Node_* p;
+	for (int i = 0; i < size; i++)
+	{
+		p = hashTable[i];
+		while (p)
+		{
+			printf("%5d", p->data);
+			p = p->next;
+		}
+		printf("\n");
 	}
 }
