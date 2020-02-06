@@ -1,12 +1,22 @@
 #include "Header.h"
+#include <string.h>
 
 
-int HashFunction(int k)
+int HashFunction(const char* key)
 {
-	int N = 13;
+	int hash = 1234;
 	double A = 0.618033;
-	int hash = N * fmod(k * A, 1);
-	return (hash);
+	//int hash = N * fmod(key * A, 1);
+	char t;
+
+	while (*key )
+	{
+		t = *key;
+		hash += hash * fmod(t * A, 1);
+		++key;
+	}
+	
+	return hash;
 }
 
 int main(int argc, char* argv[])
@@ -19,10 +29,19 @@ int main(int argc, char* argv[])
 	//Solution3(argc, argv);
 
 	int key = 97;
+	char* s = "Doom";
 
-	key = HashFunction(key);
+	//key = HashFunction(key);
+	int k2 = HashFunction(s);
+	printf("key = %d\n", k2);
 
-	printf("key = %d", key);
-	
+	s = "Dom";
+	 k2 = HashFunction(s);
+	printf("key = %d\n", k2);
+
+	s = "Doo";
+	 k2 = HashFunction(s);
+	printf("key = %d\n", k2);
+
 	return (0);
 }
